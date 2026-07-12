@@ -1,0 +1,329 @@
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+
+body { background: #121212; color: #fff; }
+
+.app {
+  display: flex;
+  min-height: calc(100vh - 90px);
+}
+
+.sidebar {
+  width: 280px;
+  background: #000;
+  padding: 20px;
+  flex-shrink: 0;
+}
+
+.logo { margin-bottom: 20px; color: #1db954; }
+
+#searchBox {
+  width: 100%;
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  margin-bottom: 15px;
+}
+
+.main {
+  flex: 1;
+  padding: 20px 30px;
+  overflow-y: auto;
+}
+
+.main h2 { margin: 20px 0 10px; }
+
+.song-list { display: flex; flex-direction: column; gap: 6px; }
+
+.song-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.song-row:hover { background: #1a1a1a; }
+
+.song-row img { width: 40px; height: 40px; border-radius: 4px; object-fit: cover; }
+
+.song-title { font-weight: 600; }
+.song-artist { font-size: 0.85em; color: #aaa; }
+.song-plays { margin-left: auto; font-size: 0.8em; color: #666; }
+
+.player-bar {
+  height: 90px;
+  background: #181818;
+  border-top: 1px solid #282828;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  position: sticky;
+  bottom: 0;
+}
+
+.now-playing { display: flex; align-items: center; gap: 10px; width: 250px; }
+.now-playing img { width: 50px; height: 50px; border-radius: 4px; object-fit: cover; background:#333; }
+.dim { color: #aaa; font-size: 0.85em; }
+
+.controls { display: flex; align-items: center; gap: 10px; flex: 1; justify-content: center; }
+#playPauseBtn {
+  background: #1db954; color: #000; border: none; border-radius: 50%;
+  width: 36px; height: 36px; cursor: pointer; font-size: 1em;
+}
+#seekBar { width: 300px; }
+
+.volume { display: flex; align-items: center; gap: 6px; width: 150px; justify-content: flex-end; }
+
+/* ---------- Playlists (sidebar) ---------- */
+.playlists-section { margin-top: 25px; }
+.playlists-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.playlists-header h3 { font-size: 0.95em; color: #aaa; }
+#newPlaylistBtn {
+  background: none; border: 1px solid #1db954; color: #1db954;
+  border-radius: 12px; padding: 3px 10px; font-size: 0.8em; cursor: pointer;
+}
+#newPlaylistBtn:hover { background: #1db954; color: #000; }
+
+.playlist-list { display: flex; flex-direction: column; gap: 4px; }
+.playlist-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px; border-radius: 6px; cursor: pointer; font-size: 0.9em;
+}
+.playlist-row:hover { background: #1a1a1a; }
+.playlist-row .pcount { color: #666; font-size: 0.85em; }
+.playlist-row .delBtn {
+  background: none; border: none; color: #666; cursor: pointer; font-size: 0.9em;
+}
+.playlist-row .delBtn:hover { color: #e22134; }
+
+/* ---------- Add-to-playlist button on song rows ---------- */
+.addBtn {
+  background: none; border: 1px solid #444; color: #ccc;
+  border-radius: 50%; width: 26px; height: 26px; cursor: pointer; font-size: 1em;
+  flex-shrink: 0;
+}
+.addBtn:hover { border-color: #1db954; color: #1db954; }
+.removeBtn {
+  background: none; border: none; color: #666; cursor: pointer; font-size: 0.85em;
+}
+.removeBtn:hover { color: #e22134; }
+
+/* ---------- Playlist detail view ---------- */
+.playlist-view { margin-bottom: 30px; }
+.playlist-view.hidden { display: none; }
+.playlist-view-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+#closePlaylistViewBtn {
+  background: none; border: 1px solid #444; color: #ccc; border-radius: 14px;
+  padding: 4px 12px; cursor: pointer;
+}
+#closePlaylistViewBtn:hover { border-color: #fff; color: #fff; }
+
+/* ---------- Auth ---------- */
+.auth-area { margin-bottom: 15px; }
+#loginBtn, #logoutBtn {
+  width: 100%; padding: 8px; border-radius: 20px; border: 1px solid #1db954;
+  background: none; color: #1db954; cursor: pointer; font-weight: 600;
+}
+#loginBtn:hover, #logoutBtn:hover { background: #1db954; color: #000; }
+
+.user-badge {
+  display: flex; align-items: center; justify-content: space-between;
+  background: #1a1a1a; padding: 8px 12px; border-radius: 20px; margin-bottom: 6px;
+  font-size: 0.9em;
+}
+.user-badge .avatar {
+  width: 24px; height: 24px; border-radius: 50%; background: #1db954;
+  color: #000; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.8em; margin-right: 8px;
+}
+.user-badge-name { display: flex; align-items: center; flex: 1; }
+
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center; z-index: 100;
+}
+.modal-overlay.hidden { display: none; }
+.modal {
+  background: #181818; padding: 30px; border-radius: 10px; width: 320px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.modal-header { display: flex; justify-content: space-between; align-items: center; }
+#authModalClose { background: none; border: none; color: #aaa; cursor: pointer; font-size: 1.1em; }
+.modal input {
+  padding: 10px; border-radius: 6px; border: 1px solid #333; background: #121212;
+  color: #fff; outline: none;
+}
+.modal input.hidden { display: none; }
+#authSubmitBtn {
+  background: #1db954; color: #000; border: none; border-radius: 20px;
+  padding: 10px; font-weight: 700; cursor: pointer;
+}
+#authSubmitBtn:hover { background: #1ed760; }
+.auth-switch { text-align: center; font-size: 0.85em; color: #aaa; }
+.auth-switch a { color: #1db954; text-decoration: none; margin-left: 4px; }
+.auth-error {
+  background: #3a1414; color: #ff6b6b; padding: 8px 10px; border-radius: 6px; font-size: 0.85em;
+}
+.auth-error.hidden { display: none; }
+
+/* ---------- Full-page auth gate ---------- */
+.auth-gate {
+  position: fixed; inset: 0; background: #000;
+  display: flex; align-items: center; justify-content: center; z-index: 200;
+}
+.auth-gate.hidden { display: none; }
+.auth-gate-box {
+  width: 340px; display: flex; flex-direction: column; gap: 14px; text-align: center;
+}
+.auth-gate-box .logo { margin-bottom: 0; }
+.auth-gate-box h2 { font-size: 1.1em; color: #ccc; font-weight: 500; margin-bottom: 6px; }
+.auth-gate-box input {
+  padding: 12px; border-radius: 6px; border: 1px solid #333; background: #121212;
+  color: #fff; outline: none; text-align: left;
+}
+.auth-gate-box input.hidden { display: none; }
+.auth-gate-box input:focus { border-color: #1db954; }
+#authSubmitBtn {
+  background: #1db954; color: #000; border: none; border-radius: 24px;
+  padding: 12px; font-weight: 700; cursor: pointer; font-size: 0.95em;
+}
+#authSubmitBtn:hover { background: #1ed760; }
+.auth-switch { font-size: 0.85em; color: #aaa; }
+.auth-switch a { color: #1db954; text-decoration: none; margin-left: 4px; cursor: pointer; }
+
+#appRoot.hidden { display: none; }
+
+/* ---------- Add-to-playlist popover ---------- */
+.add-to-playlist-menu {
+  position: fixed; background: #282828; border-radius: 8px; padding: 6px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5); z-index: 150; min-width: 200px;
+  max-height: 280px; overflow-y: auto;
+}
+.add-to-playlist-menu.hidden { display: none; }
+.atp-item {
+  padding: 10px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9em;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.atp-item:hover { background: #3a3a3a; }
+.atp-item.disabled { color: #666; cursor: default; }
+.atp-item.disabled:hover { background: none; }
+.atp-check { color: #1db954; }
+.atp-divider { border-top: 1px solid #3a3a3a; margin: 6px 0; }
+.atp-new {
+  padding: 10px 12px; color: #1db954; font-weight: 600; cursor: pointer;
+  border-radius: 4px; font-size: 0.9em;
+}
+.atp-new:hover { background: #3a3a3a; }
+
+/* ---------- Auth gate (full screen) ---------- */
+.auth-gate {
+  position: fixed; inset: 0; background: #121212;
+  display: flex; align-items: center; justify-content: center; z-index: 200;
+}
+.auth-gate.hidden { display: none; }
+.auth-gate-box {
+  width: 340px; display: flex; flex-direction: column; gap: 12px; text-align: center;
+}
+.auth-gate-box .logo { margin-bottom: 5px; }
+.auth-gate-box h2 { color: #ccc; font-weight: 500; margin-bottom: 10px; }
+.auth-gate-box input {
+  padding: 12px; border-radius: 6px; border: 1px solid #333; background: #1a1a1a;
+  color: #fff; outline: none; text-align: left;
+}
+.auth-gate-box input.hidden { display: none; }
+.auth-gate-box #authSubmitBtn {
+  background: #1db954; color: #000; border: none; border-radius: 24px;
+  padding: 12px; font-weight: 700; cursor: pointer; font-size: 1em;
+}
+.auth-gate-box #authSubmitBtn:hover { background: #1ed760; }
+
+.app.hidden { display: none; }
+.player-bar.hidden { display: none; }
+
+/* ---------- Sidebar nav ---------- */
+.nav-menu { display: flex; flex-direction: column; gap: 2px; margin-bottom: 18px; }
+.nav-item {
+  padding: 8px 10px; border-radius: 6px; cursor: pointer; font-size: 0.95em; color: #ccc;
+}
+.nav-item:hover { background: #1a1a1a; color: #fff; }
+.nav-item.active { background: #1a1a1a; color: #1db954; font-weight: 600; }
+
+.view.hidden { display: none; }
+
+/* ---------- User menu (bottom of sidebar) ---------- */
+.sidebar { display: flex; flex-direction: column; }
+.user-menu { margin-top: auto; padding-top: 15px; position: relative; }
+.user-menu-trigger {
+  display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 6px;
+  cursor: pointer; background: #1a1a1a;
+}
+.user-menu-trigger:hover { background: #222; }
+.user-menu-trigger .avatar {
+  width: 26px; height: 26px; border-radius: 50%; background: #1db954;
+  color: #000; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.85em; flex-shrink: 0;
+}
+#userMenuName { flex: 1; font-size: 0.9em; }
+.chevron { color: #888; font-size: 0.8em; }
+.user-menu-dropdown {
+  position: absolute; bottom: 105%; left: 0; right: 0; background: #222;
+  border-radius: 6px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+.user-menu-dropdown.hidden { display: none; }
+.user-menu-dropdown button {
+  width: 100%; padding: 10px; background: none; border: none; color: #eee;
+  text-align: left; cursor: pointer; font-size: 0.9em;
+}
+.user-menu-dropdown button:hover { background: #333; color: #ff6b6b; }
+
+/* ---------- Tile grids (genres / albums) ---------- */
+.tile-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px; margin-top: 10px;
+}
+.tile {
+  background: #181818; border-radius: 8px; padding: 14px; cursor: pointer;
+  transition: background 0.15s;
+}
+.tile:hover { background: #282828; }
+.tile img {
+  width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 6px; margin-bottom: 10px;
+}
+.tile.genre-tile {
+  display: flex; align-items: center; justify-content: center; min-height: 90px;
+  font-weight: 700; font-size: 1.05em; background: linear-gradient(135deg, #1db954, #14833b);
+  color: #000;
+}
+.tile-title { font-weight: 600; font-size: 0.95em; margin-bottom: 4px; }
+.tile-sub { font-size: 0.8em; color: #aaa; }
+
+/* ---------- Detail views ---------- */
+.detail-header.hidden { display: none; }
+.backBtn {
+  background: none; border: 1px solid #444; color: #ccc; border-radius: 16px;
+  padding: 5px 14px; cursor: pointer; margin-bottom: 14px;
+}
+.backBtn:hover { border-color: #fff; color: #fff; }
+
+.album-grouped .artist-group-title {
+  color: #1db954; font-size: 0.9em; font-weight: 700; margin: 16px 0 6px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+/* ---------- Add-to-playlist popup ---------- */
+.add-to-playlist-menu {
+  position: fixed; background: #282828; border-radius: 8px; padding: 6px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6); z-index: 150; min-width: 200px;
+}
+.add-to-playlist-menu.hidden { display: none; }
+.atp-item {
+  padding: 9px 12px; border-radius: 5px; cursor: pointer; font-size: 0.9em;
+  display: flex; justify-content: space-between; color: #eee;
+}
+.atp-item:hover { background: #383838; }
+.atp-item.create-new { color: #1db954; font-weight: 600; border-top: 1px solid #3a3a3a; margin-top: 4px; padding-top: 10px; }
+.atp-empty { padding: 10px 12px; color: #888; font-size: 0.85em; }
