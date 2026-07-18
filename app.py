@@ -28,7 +28,7 @@ DB_CONFIG = {
     "password": os.getenv("DB_PASSWORD"),
     "database": os.getenv("DB_NAME"),
     "port": int(os.getenv("DB_PORT", 4000)),
-    "ssl_ca": os.getenv("DB_SSL_CA"),
+    "ssl_ca": "ca.pem",
 }
 
 pool = pooling.MySQLConnectionPool(pool_name="spotify_pool", pool_size=5, **DB_CONFIG)
