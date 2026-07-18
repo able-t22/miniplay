@@ -3,32 +3,22 @@ Spotify Mini Clone - Flask backend
 Run: python app.py
 Requires: pip install flask mysql-connector-python bcrypt
 """
-
-
-
-
 from flask import Flask, jsonify, request, send_from_directory, render_template, session
 import mysql.connector
 from mysql.connector import pooling
 import bcrypt
-import os
-from dotenv import load_dotenv
-load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY")
+app.secret_key = "change-this-to-something-random-in-production"
 
 # ---------------------------------------------------------
 # DB CONFIG -- edit these to match your local MySQL setup
 # ---------------------------------------------------------
-
-
 DB_CONFIG = {
-    "host": os.getenv("DB_HOST"),
-    "user": os.getenv("DB_USER"),
-    "password": os.getenv("DB_PASSWORD"),
-    "database": os.getenv("DB_NAME"),
-    "port": int(os.getenv("DB_PORT", 4000)),
-    "ssl_ca": "ca.pem",
+    "host": "localhost",
+    "user": "root",       # <-- change to your MySQL username
+    "password": "",   # <-- change to your MySQL password
+    "database": "spotify_clone",
 }
 
 pool = pooling.MySQLConnectionPool(pool_name="spotify_pool", pool_size=5, **DB_CONFIG)
@@ -404,11 +394,5 @@ def serve_audio(filename):
     return send_from_directory("static/audio", filename)
 
 
-import os
-
 if __name__ == "__main__":
-    app.run(
-        host="0.0.0.0",
-        port=int(os.environ.get("PORT", 5000)),
-        debug=False
-    )
+    app.run(debug=False, port=5000)
