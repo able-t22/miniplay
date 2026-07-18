@@ -1,16 +1,4 @@
--- =========================================================
--- Spotify Mini Clone - Database Schema + Seed Data
--- Run this whole file in phpMyAdmin (Import) or via CLI:
---   mysql -u root -p < schema.sql
--- =========================================================
-
-DROP DATABASE IF EXISTS spotify_clone;
-CREATE DATABASE spotify_clone CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE spotify_clone;
-
--- ---------------------------------------------------------
--- TABLE: Users
--- ---------------------------------------------------------
+-- =======================================================----------------------------------------
 CREATE TABLE Users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
